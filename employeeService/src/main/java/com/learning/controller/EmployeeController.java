@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.learning.dto.ApiResponseDto;
+import com.learning.dto.DepartmentDto;
 import com.learning.dto.EmployeeDto;
 import com.learning.entity.Employee;
 import com.learning.service.EmployeeService;
