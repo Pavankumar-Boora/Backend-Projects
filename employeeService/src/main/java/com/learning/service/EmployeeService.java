@@ -11,7 +11,7 @@ import com.learning.entity.Employee;
 public interface EmployeeService {
 	public EmployeeDto createEmployee(EmployeeDto employeeDto);
 	public ApiResponseDto getEmployeeDetails(Integer employeeId);
-	public Map<Integer, List<Employee>> getAllEmployees();
+	public Map<Map<Integer, DepartmentDto>, Map<Integer, List<Employee>>> getAllEmployees();
 	public DepartmentDto getDepartmetDetails(Integer departmentId);
 	public EmployeeDto updateEmployee(Integer employeeId,EmployeeDto employeeDto);
 	public String getLocalDateTime();

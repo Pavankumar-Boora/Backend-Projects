@@ -50,8 +50,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return apiResponseDto;
 	}
 
-	@Override
-	public Map<Integer, List<Employee>> getAllEmployees() {
+@Override
+	public Map<Map<Integer, DepartmentDto>,Map<Integer, List<Employee>>> getAllEmployees() {
 		List<Employee> employeesList = employeeRepository.findAll();
 		List<DepartmentDto> departmentList = restTemplate
 				.exchange("http://localhost:8082/department/getAllDepartments", HttpMethod.GET,
@@ -74,8 +74,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 //	            apiResponseDtoList.add(apiResponseDto);
 //	        });
 //	    });
-
-	    return employeesGroupedByDepartmentId;
+		Map<Map<Integer, DepartmentDto>,Map<Integer, List<Employee>>> mpList=new HashMap<Map<Integer,DepartmentDto>, Map<Integer,List<Employee>>>();
+		mpList.put(departmentMap, employeesGroupedByDepartmentId);
+		return mpList;
+//	    return employeesGroupedByDepartmentId;
 	}
 
 	@Override
