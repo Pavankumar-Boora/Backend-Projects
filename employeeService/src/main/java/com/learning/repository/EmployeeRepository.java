@@ -13,6 +13,7 @@ import com.learning.entity.Employee;
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Integer>{
+	
 	@Query("select  e from Employee e where e.deleted = false and e.employeeId = :employeeId")
 	public Optional<Employee> findById(@Param("employeeId") Integer employeeId);
 	

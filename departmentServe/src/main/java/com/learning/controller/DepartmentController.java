@@ -3,6 +3,8 @@ package com.learning.controller;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,15 +21,29 @@ import com.learning.dto.EmployeeDto;
 import com.learning.entity.Department;
 import com.learning.service.DepartmentService;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 @RestController
 @RequestMapping("/department")
 public class DepartmentController {
-	
+	private static final Logger logger = LoggerFactory.getLogger(DepartmentController.class);
+
 	@Autowired
 	private DepartmentService departmentService;
 	
+	@GetMapping("/checksFilter")
+	public ResponseEntity<String> checksFilter(HttpServletRequest request,HttpServletResponse response){
+		 try {
+	            Thread.sleep(5000);
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
+		return ResponseEntity.ok("X-Header : "+ request.getHeader("X-Header"));
+	}
 	@PostMapping("/createDepartment")
 	public ResponseEntity<DepartmentDto> createDepartment(@RequestBody DepartmentDto departmentDto){
+		logger.info("executing the createDepartment");
 		return ResponseEntity.ok(departmentService.createDepartment(departmentDto));
 	}
 	

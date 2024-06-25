@@ -19,7 +19,7 @@ public interface DepartmentRepository extends JpaRepository<Department, Integer>
 	public void deleteById(@Param("departmentId") Integer departmentId);
 	
 	@Query("select  e from Department e where e.deleted = false and e.departmentId = :departmentId")
-	public Optional<Department> findById(@Param("departmentId") Integer departmentId);
+	public Optional<Department> findById(@Param("departmentId") Integer departmentId);	
 	
 	@Query("select  e from Department e where e.deleted = false")
 	public List<Department> findAll();

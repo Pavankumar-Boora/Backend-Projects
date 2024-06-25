@@ -26,8 +26,14 @@ import com.learning.repository.EmployeeRepository;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
-	@Autowired
+//	@Autowired
+	
 	private EmployeeRepository employeeRepository;
+	
+	public EmployeeServiceImpl(EmployeeRepository employeeRepository) {
+		this.employeeRepository=employeeRepository;
+	}
+	
 	@Autowired
 	private RestTemplate restTemplate;
 	@Autowired
@@ -55,15 +61,20 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public Map<Map<Integer, DepartmentDto>,Map<Integer, List<Employee>>> getAllEmployees() {
 		List<Employee> employeesList = employeeRepository.findAll();
 		List<DepartmentDto> departmentList = restTemplate
-				.exchange("http://localhost:8082/department/getAllDepartments", HttpMethod.GET,
+				.exchange("http://department-serve/department/getAllDepartments/", HttpMethod.GET,
 						new HttpEntity<>(new HttpHeaders()), new ParameterizedTypeReference<List<DepartmentDto>>() {
 						})
 				.getBody();
 		Map<Integer, DepartmentDto> departmentMap = departmentList.stream()
 				.collect(Collectors.toMap(DepartmentDto::getDepartmentId, department -> department));
 
+		
+		
 		Map<Integer, List<Employee>> employeesGroupedByDepartmentId = employeesList.stream()
 				.collect(Collectors.groupingBy(Employee::getEmployeeDepartmentId));
+		
+		
+		
 //		List<ApiResponseDto> apiResponseDtoList = new ArrayList<>();
 //
 //	    employeesGroupedByDepartmentId.forEach((departmentId, employees) -> {
@@ -75,6 +86,19 @@ public class EmployeeServiceImpl implements EmployeeService {
 //	            apiResponseDtoList.add(apiResponseDto);
 //	        });
 //	    });
+		
+//		 employeesList.stream()
+//	                .map(employee -> {
+//	                    EmployeeDto employeeDto = new EmployeeDto();
+//	                    DepartmentDto departmentDto = departmentMap.get(employee.getEmployeeDepartmentId());
+//	                    EmployeeDto employeeDto2 = new EmployeeDto(employee);
+//	                    employeeDto2.setEmployeeDepartmentId(employeeDto2.getEmployeeDepartmentId()+""+departmentDto.getDepartmentName());
+//	                    return apiResponseDto;
+//	                })   
+//	                .collect(Collectors.toList());
+		
+		
+		
 		Map<Map<Integer, DepartmentDto>,Map<Integer, List<Employee>>> mpList=new HashMap<Map<Integer,DepartmentDto>, Map<Integer,List<Employee>>>();
 		mpList.put(departmentMap, employeesGroupedByDepartmentId);
 		return mpList;
@@ -140,8 +164,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	
 	public DepartmentDto getDepartmetDetails(Integer departmentId) {
 		ResponseEntity<DepartmentDto> responseEntity = restTemplate.getForEntity(
-				"http://localhost:8082/department/getOnlyDepartment/" + departmentId, DepartmentDto.class);
+				"http://department-serve/department/getOnlyDepartment/" + departmentId, DepartmentDto.class);
 		return responseEntity.getBody();
 	}
-
 }
