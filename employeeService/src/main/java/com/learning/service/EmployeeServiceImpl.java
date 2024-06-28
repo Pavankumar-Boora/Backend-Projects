@@ -61,7 +61,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public Map<Map<Integer, DepartmentDto>,Map<Integer, List<Employee>>> getAllEmployees() {
 		List<Employee> employeesList = employeeRepository.findAll();
 		List<DepartmentDto> departmentList = restTemplate
-				.exchange("http://department-serve/department/getAllDepartments/", HttpMethod.GET,
+				.exchange("http://department-serve/department/getAllDepartments", HttpMethod.GET,
 						new HttpEntity<>(new HttpHeaders()), new ParameterizedTypeReference<List<DepartmentDto>>() {
 						})
 				.getBody();
