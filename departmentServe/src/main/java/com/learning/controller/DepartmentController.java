@@ -21,6 +21,7 @@ import com.learning.dto.EmployeeDto;
 import com.learning.entity.Department;
 import com.learning.service.DepartmentService;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -28,7 +29,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @RequestMapping("/department")
 public class DepartmentController {
 	private static final Logger logger = LoggerFactory.getLogger(DepartmentController.class);
-
+	public static final String DEPARTMENT_SERVICE = "department-service";
 	@Autowired
 	private DepartmentService departmentService;
 	
@@ -52,6 +53,7 @@ public class DepartmentController {
 		return ResponseEntity.ok(departmentService.updateDepartment(departmentId,departmentDto));
 	}
 	@GetMapping("/{departmentId}")
+	@CircuitBreaker(name = DEPARTMENT_SERVICE, fallbackMethod = "userServiceFallBack")
 	public ResponseEntity<Map<DepartmentDto, List<EmployeeDto>>> fetchDepartment(@PathVariable Integer departmentId){
 		return ResponseEntity.ok(departmentService.getDepartmentById(departmentId));
 	}
@@ -66,5 +68,27 @@ public class DepartmentController {
 	@DeleteMapping("/deleteDepartmentById/{departmentId}")
 	public ResponseEntity<String> softDeletionOfDepartment(@PathVariable Integer departmentId){
 		return ResponseEntity.ok(departmentService.softDeleteDepartmentById(departmentId));
+	}
+	
+	public ResponseEntity<Map<DepartmentDto, List<EmployeeDto>>> userServiceFallBack(@PathVariable Integer departmentId, Exception userException) {
+		 // Create default DepartmentDto
+        DepartmentDto defaultDepartment = new DepartmentDto();
+        defaultDepartment.setDepartmentId(-1);
+        defaultDepartment.setDepartmentName("Default Department");
+
+        // Create default EmployeeDto
+        EmployeeDto defaultEmployee = new EmployeeDto();
+        defaultEmployee.setEmployeeDepartmentId(-1);
+        defaultEmployee.setEmployeeFirstName("Default Employee");
+        defaultEmployee.setEmployeeDepartmentId(-1);
+
+        // Create fallback response map
+        Map<DepartmentDto, List<EmployeeDto>> fallbackResponse = Map.of(
+            defaultDepartment, List.of(defaultEmployee)
+        );
+
+        logger.info("Fallback method executed for departmentId: {}. Returning default response.", departmentId);
+
+        return ResponseEntity.ok(fallbackResponse);
 	}
 }
