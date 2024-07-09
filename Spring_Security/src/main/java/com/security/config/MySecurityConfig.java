@@ -30,11 +30,11 @@ public class MySecurityConfig {
 	@Autowired
 	HttpSecurity httpSecurity;
 
-	@Bean
-	public InMemoryUserDetailsManager setUpUsers() {
-		UserDetails user1 = User.withUsername("Pavan").password("Pavan").roles("admin", "user").build();
-		return new InMemoryUserDetailsManager(user1);
-	}
+	// @Bean
+	// public InMemoryUserDetailsManager setUpUsers() {
+	// 	UserDetails user1 = User.withUsername("Pavan").password("Pavan").roles("admin", "user").build();
+	// 	return new InMemoryUserDetailsManager(user1);
+	// }
 //
 	@Bean
 	PasswordEncoder passwordEncoder() {
@@ -76,10 +76,10 @@ public class MySecurityConfig {
 		return dataSource;
 	}
 	
-//	@Bean
-//	public JdbcTemplate jdbcTemplate() {
-//		return new JdbcTemplate(dataSource());
-//	}
+	@Bean
+	public JdbcTemplate jdbcTemplate() {
+		return new JdbcTemplate(dataSource());
+	}
 
 	
 	@Bean
